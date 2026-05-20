@@ -1,4 +1,4 @@
--- [[ RYOSEN UI LIBRARY ENGINE - V2.5 (TOTAL FIX) ]] --
+-- [[ RYOSEN UI LIBRARY ENGINE - V2.6 (MOBILE & TEXT FIX) ]] --
 -- [[ CREATOR: KRAXZYV / VANNDERL ]] --
 
 local RyosenLib = {}
@@ -13,7 +13,6 @@ function RyosenLib:CreateWindow(Config)
     local HubName = Config.Name or "RYOSEN HUB"
     local WebhookUrl = Config.Webhook or ""
     
-    -- Bersihin UI lama kalo ada biar gak tumpang tindih
     if CoreGui:FindFirstChild("RyosenHub_Ultimate") then 
         CoreGui.RyosenHub_Ultimate:Destroy() 
     end
@@ -24,16 +23,13 @@ function RyosenLib:CreateWindow(Config)
     Gui.ResetOnSpawn = false
     Gui.Parent = CoreGui
 
-    -- =======================================================
-    -- [[ 1. RAYFIELD-STYLE LOADING SCREEN (LANGSUNG JALAN) ]] --
-    -- =======================================================
+    -- [[ 1. RAYFIELD-STYLE LOADING SCREEN ]] --
     local LoadingFrame = Instance.new("Frame")
     LoadingFrame.Name = "LoadingFrame"
     LoadingFrame.Size = UDim2.new(0, 360, 0, 160)
     LoadingFrame.Position = UDim2.new(0.5, -180, 0.5, -80)
     LoadingFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 18)
     LoadingFrame.BorderSizePixel = 0
-    LoadingFrame.Visible = true
     LoadingFrame.Parent = Gui
     Instance.new("UICorner", LoadingFrame).CornerRadius = UDim.new(0, 10)
     
@@ -44,7 +40,7 @@ function RyosenLib:CreateWindow(Config)
     local LoadTitle = Instance.new("TextLabel", LoadingFrame)
     LoadTitle.Size = UDim2.new(1, 0, 0, 50)
     LoadTitle.Position = UDim2.new(0, 0, 0, 25)
-    LoadTitle.Text = "RYOSEN" -- Tetap RYOSEN sesuai request lu, Bos!
+    LoadTitle.Text = "RYOSEN"
     LoadTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
     LoadTitle.Font = Enum.Font.GothamBold
     LoadTitle.TextSize = 32
@@ -54,13 +50,11 @@ function RyosenLib:CreateWindow(Config)
     BarBg.Size = UDim2.new(0.8, 0, 0, 6)
     BarBg.Position = UDim2.new(0.1, 0, 0, 90)
     BarBg.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
-    BarBg.BorderSizePixel = 0
     Instance.new("UICorner", BarBg)
 
     local BarFill = Instance.new("Frame", BarBg)
     BarFill.Size = UDim2.new(0, 0, 1, 0)
-    BarFill.BackgroundColor3 = Color3.fromRGB(240, 240, 245)
-    BarFill.BorderSizePixel = 0
+    BarFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Instance.new("UICorner", BarFill)
 
     local PercentText = Instance.new("TextLabel", LoadingFrame)
@@ -72,51 +66,49 @@ function RyosenLib:CreateWindow(Config)
     PercentText.TextSize = 13
     PercentText.BackgroundTransparency = 1
 
-    -- =======================================================
-    -- [[ 2. MAIN WINDOW DESIGN (STRUKTUR UI UTAMA) ]] --
-    -- =======================================================
+    -- [[ 2. MAIN WINDOW DESIGN ]] --
     local Main = Instance.new("Frame")
     Main.Name = "MainFrame"
-    Main.Size = UDim2.new(0, 580, 0, 440)
-    Main.Position = UDim2.new(0.5, -290, 0.5, -220)
+    Main.Size = UDim2.new(0, 560, 0, 400) -- Ukuran sedikit disesuaikan biar pas di mobile
+    Main.Position = UDim2.new(0.5, -280, 0.5, -200)
     Main.BackgroundColor3 = Color3.fromRGB(15, 15, 18)
     Main.BorderSizePixel = 0
     Main.Active = true
     Main.Draggable = true
-    Main.Visible = false -- Sembunyi pas loading screen jalan
+    Main.Visible = false 
     Main.Parent = Gui
     Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 8)
-    local MainStroke = Instance.new("UIStroke", Main); MainStroke.Color = Color3.fromRGB(240, 240, 245); MainStroke.Thickness = 1.5
+    local MainStroke = Instance.new("UIStroke", Main); MainStroke.Color = Color3.fromRGB(45, 45, 50); MainStroke.Thickness = 1.5
 
-    -- FLOATING MINI BAR
+    -- FLOATING MINI BAR (FIX TEXT MENYATU & WARNA NEON)
     local MiniBar = Instance.new("TextButton")
     MiniBar.Name = "MiniBar"
-    MiniBar.Size = UDim2.new(0, 240, 0, 44) 
-    MiniBar.Position = UDim2.new(0.5, -120, 0, 25)
+    MiniBar.Size = UDim2.new(0, 260, 0, 46) -- Dilebarin dikit biar text leluasa
+    MiniBar.Position = UDim2.new(0.5, -130, 0, 35)
     MiniBar.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
-    MiniBar.Text = HubName 
-    MiniBar.TextColor3 = Color3.fromRGB(225, 225, 230) 
+    MiniBar.Text = "  " .. HubName .. "  " 
+    MiniBar.TextColor3 = Color3.fromRGB(255, 255, 255) -- MURNI PUTIH BIASA, KAGAK NEON NYOROT
     MiniBar.Font = Enum.Font.GothamBold
-    MiniBar.TextSize = 14
+    MiniBar.TextSize = 15 -- Ukuran pas, gak kekecilan gak kebesaran
+    MiniBar.TextScaled = false
     MiniBar.TextWrapped = true 
     MiniBar.Visible = false 
     MiniBar.Active = true
     MiniBar.Draggable = true
     MiniBar.Parent = Gui
     Instance.new("UICorner", MiniBar).CornerRadius = UDim.new(0, 6)
-    local MiniBarStroke = Instance.new("UIStroke", MiniBar); MiniBarStroke.Color = Color3.fromRGB(225, 225, 230); MiniBarStroke.Thickness = 1.5
+    local MiniBarStroke = Instance.new("UIStroke", MiniBar); MiniBarStroke.Color = Color3.fromRGB(60, 60, 65); MiniBarStroke.Thickness = 1.5
 
     -- Tombol Minimize (-)
     local MinBtn = Instance.new("TextButton", Main)
-    MinBtn.Size = UDim2.new(0, 28, 0, 28)
-    MinBtn.Position = UDim2.new(1, -38, 0, 10)
+    MinBtn.Size = UDim2.new(0, 30, 0, 30)
+    MinBtn.Position = UDim2.new(1, -40, 0, 10)
     MinBtn.BackgroundColor3 = Color3.fromRGB(26, 26, 30)
     MinBtn.Text = "-"
     MinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     MinBtn.Font = Enum.Font.GothamBold
     MinBtn.TextSize = 16
     Instance.new("UICorner", MinBtn).CornerRadius = UDim.new(1, 0)
-    local MinBtnStroke = Instance.new("UIStroke", MinBtn); MinBtnStroke.Color = Color3.fromRGB(240, 240, 245); MinBtnStroke.Thickness = 1
 
     MinBtn.MouseButton1Click:Connect(function() Main.Visible = false; MiniBar.Visible = true end)
     MiniBar.MouseButton1Click:Connect(function() MiniBar.Visible = false; Main.Visible = true end)
@@ -137,7 +129,7 @@ function RyosenLib:CreateWindow(Config)
     Brand.Text = HubName
     Brand.TextColor3 = Color3.fromRGB(255, 255, 255)
     Brand.Font = Enum.Font.GothamBold
-    Brand.TextSize = 14
+    Brand.TextSize = 13
     Brand.TextXAlignment = "Left"
     Brand.BackgroundTransparency = 1
 
@@ -147,35 +139,67 @@ function RyosenLib:CreateWindow(Config)
     Container.Position = UDim2.new(0, 170, 0, 45)
     Container.BackgroundTransparency = 1
 
-    -- PROFILE BANNER AVATAR
+    -- [[ AVATAR BANNER + FIX BACAAN AKTIF HIJAU NONGOL ]] --
     local Profile = Instance.new("Frame", Sidebar)
-    Profile.Size = UDim2.new(0.9, 0, 0, 75) 
-    Profile.Position = UDim2.new(0.05, 0, 1, -85)
+    Profile.Name = "ProfileCard"
+    Profile.Size = UDim2.new(0.9, 0, 0, 70) 
+    Profile.Position = UDim2.new(0.05, 0, 1, -80)
     Profile.BackgroundColor3 = Color3.fromRGB(26, 26, 32)
+    Profile.BorderSizePixel = 0
     Instance.new("UICorner", Profile).CornerRadius = UDim.new(0, 8)
+    local ProfileStroke = Instance.new("UIStroke", Profile); ProfileStroke.Color = Color3.fromRGB(45, 45, 50); ProfileStroke.Thickness = 1
 
     local Avatar = Instance.new("ImageLabel", Profile)
-    Avatar.Size = UDim2.new(0, 40, 0, 40) 
-    Avatar.Position = UDim2.new(0, 8, 0, 10)
+    Avatar.Size = UDim2.new(0, 38, 0, 38) 
+    Avatar.Position = UDim2.new(0, 8, 0, 8)
     Avatar.Image = "rbxthumb://type=AvatarHeadShot&id="..LocalPlayer.UserId.."&w=150&h=150"
     Avatar.BackgroundTransparency = 1
     Instance.new("UICorner", Avatar).CornerRadius = UDim.new(1, 0)
 
     local UserText = Instance.new("TextLabel", Profile)
-    UserText.Size = UDim2.new(1, -60, 0, 36) 
-    UserText.Position = UDim2.new(0, 54, 0, 12) 
+    UserText.Size = UDim2.new(1, -58, 0, 28) 
+    UserText.Position = UDim2.new(0, 52, 0, 8) 
     UserText.Text = LocalPlayer.DisplayName .. "\n@" .. LocalPlayer.Name
-    UserText.TextColor3 = Color3.new(1, 1, 1)
+    UserText.TextColor3 = Color3.fromRGB(255, 255, 255)
     UserText.Font = Enum.Font.GothamBold
-    UserText.TextSize = 10 
+    UserText.TextSize = 9 
     UserText.TextXAlignment = "Left"
     UserText.BackgroundTransparency = 1
 
+    -- Ini Status Dot & Text "Aktif" Hijau yang Sempat Ilang
+    local StatusDot = Instance.new("Frame", Profile)
+    StatusDot.Size = UDim2.new(0, 6, 0, 6)
+    StatusDot.Position = UDim2.new(0, 53, 0, 44) -- Koordinat presisi biar pas di bawah nama
+    StatusDot.BackgroundColor3 = Color3.fromRGB(0, 215, 100)
+    Instance.new("UICorner", StatusDot)
+
+    local StatusText = Instance.new("TextLabel", Profile)
+    StatusText.Size = UDim2.new(0, 80, 0, 14)
+    StatusText.Position = UDim2.new(0, 64, 0, 40)
+    StatusText.Text = "Aktif"
+    StatusText.TextColor3 = Color3.fromRGB(0, 215, 100) -- Hijau Indikator Aktif
+    StatusText.Font = Enum.Font.GothamBold
+    StatusText.TextSize = 10
+    StatusText.TextXAlignment = "Left"
+    StatusText.BackgroundTransparency = 1
+
+    -- Handler Sistem AFK
+    LocalPlayer.Idled:Connect(function() 
+        StatusDot.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+        StatusText.Text = "AFK"
+        StatusText.TextColor3 = Color3.fromRGB(255, 50, 50) 
+    end)
+    UserInputService.InputBegan:Connect(function() 
+        if StatusText.Text == "AFK" then 
+            StatusDot.BackgroundColor3 = Color3.fromRGB(0, 215, 100)
+            StatusText.Text = "Aktif"
+            StatusText.TextColor3 = Color3.fromRGB(0, 215, 100) 
+        end 
+    end)
+
     -- =======================================================
-    -- [[ 3. SISTEM ASYNC LOGIC JALAN PARALEL ]] --
+    -- [[ 3. RUNTIME THREADS ]] --
     -- =======================================================
-    
-    -- Jalankan Webhook secara terpisah total biar anti-stuck
     task.spawn(function()
         if WebhookUrl and WebhookUrl ~= "" and string.find(WebhookUrl, "http") then
             pcall(function()
@@ -192,7 +216,6 @@ function RyosenLib:CreateWindow(Config)
         end
     end)
 
-    -- Animasi Loading Screen
     task.spawn(function()
         for i = 1, 100 do
             BarFill.Size = UDim2.new(i / 100, 0, 1, 0)
@@ -202,13 +225,6 @@ function RyosenLib:CreateWindow(Config)
         task.wait(0.1)
         LoadingFrame:Destroy()
         Main.Visible = true
-    end)
-
-    -- Toggle via RightShift
-    UserInputService.InputBegan:Connect(function(input, gpe)
-        if not gpe and input.KeyCode == Enum.KeyCode.RightShift then
-            if Main.Visible then Main.Visible = false; MiniBar.Visible = false else Main.Visible = true; MiniBar.Visible = false end
-        end
     end)
 
     local WindowObj = {}
