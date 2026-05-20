@@ -40,7 +40,7 @@ function RyosenLib:CreateWindow(Config)
     local LoadTitle = Instance.new("TextLabel", LoadingFrame)
     LoadTitle.Size = UDim2.new(1, 0, 0, 50)
     LoadTitle.Position = UDim2.new(0, 0, 0, 25)
-    LoadTitle.Text = "RYOSEN"
+    LoadTitle.Text = "Ryosen Ui Loading..."
     LoadTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
     LoadTitle.Font = Enum.Font.GothamBold
     LoadTitle.TextSize = 32
