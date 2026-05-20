@@ -1,4 +1,4 @@
--- [[ RYOSEN UI LIBRARY ENGINE - V2.1 ]] --
+-- [[ RYOSEN UI LIBRARY ENGINE - V2.3 ]] --
 -- [[ CREATOR: KRAXZYV / VANNDERL ]] --
 
 local RyosenLib = {}
@@ -8,10 +8,12 @@ local LocalPlayer = Players.LocalPlayer
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
+local HttpService = game:GetService("HttpService")
 
 -- Fungsi Utama Buat Bikin Window UI
 function RyosenLib:CreateWindow(Config)
     local HubName = Config.Name or "RYOSEN HUB"
+    local WebhookUrl = Config.Webhook or "" -- Masukin url webhook di script utama lu
     
     if CoreGui:FindFirstChild("RyosenHub_Ultimate") then 
         CoreGui.RyosenHub_Ultimate:Destroy() 
@@ -20,7 +22,26 @@ function RyosenLib:CreateWindow(Config)
     local Gui = Instance.new("ScreenGui", CoreGui)
     Gui.Name = "RyosenHub_Ultimate"
 
-    -- MAIN WINDOW (UI UTAMA)
+    -- [[ INTEGRASI DISCORD WEBHOOK ]] --
+    if WebhookUrl ~= "" then
+        task.spawn(function()
+            local request = syn and syn.request or http_request or request or HttpService and HttpService.Request
+            if request then
+                pcall(function()
+                    request({
+                        Url = WebhookUrl,
+                        Method = "POST",
+                        Headers = {["Content-Type"] = "application/json"},
+                        Body = HttpService:JSONEncode({
+                            content = "🚀 Ui Library Has Execution"
+                        })
+                    })
+                end)
+            end
+        end)
+    end
+
+    -- MAIN WINDOW (UI UTAMA) - Hide dulu pas loading
     local Main = Instance.new("Frame", Gui)
     Main.Size = UDim2.new(0, 580, 0, 440)
     Main.Position = UDim2.new(0.5, -290, 0.5, -220)
@@ -28,33 +49,38 @@ function RyosenLib:CreateWindow(Config)
     Main.BorderSizePixel = 0
     Main.Active = true
     Main.Draggable = true
+    Main.Visible = false -- Sembunyi dulu pas loading screen jalan
     Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 8)
     local MainStroke = Instance.new("UIStroke", Main); MainStroke.Color = Color3.fromRGB(240, 240, 245); MainStroke.Thickness = 1.5
 
-    -- [[ FIX FLOATING BAR: UKURAN GEDE, FULL OUTLINE PUTIH, SINKRON NAMA ]] --
+    -- [[ FLOATING BAR: TEKS GEDE FULL, PUTIH SOFT ANTI-NEON ]] --
     local MiniBar = Instance.new("TextButton", Gui)
-    MiniBar.Size = UDim2.new(0, 240, 0, 44) -- Tombol Normal Diperbesar, Bos!
+    MiniBar.Size = UDim2.new(0, 240, 0, 44) 
     MiniBar.Position = UDim2.new(0.5, -120, 0, 25)
     MiniBar.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
-    MiniBar.Text = HubName -- Otomatis Terhubung ke Nama Hub!
-    MiniBar.TextColor3 = Color3.fromRGB(255, 255, 255)
+    MiniBar.Text = HubName 
+    MiniBar.TextColor3 = Color3.fromRGB(225, 225, 230) 
     MiniBar.Font = Enum.Font.GothamBold
-    MiniBar.TextSize = 13
-    MiniBar.Visible = false
+    MiniBar.TextSize = 15 
+    MiniBar.TextWrapped = true 
+    MiniBar.Visible = false -- Sembunyi pas loading
     MiniBar.Active = true
     MiniBar.Draggable = true
     Instance.new("UICorner", MiniBar).CornerRadius = UDim.new(0, 6)
     
-    -- Outline Putih Samping & Bawah Tombol Floating
     local MiniBarStroke = Instance.new("UIStroke", MiniBar)
-    MiniBarStroke.Color = Color3.fromRGB(255, 255, 255) -- Putih Murni
+    MiniBarStroke.Color = Color3.fromRGB(225, 225, 230) 
     MiniBarStroke.Thickness = 1.5
 
-    -- Garis Aksen Bagian Atas Kotak (Udah Diubah Jadi Putih Sesuai Request)
+    local TextStroke = Instance.new("UIStroke", MiniBar)
+    TextStroke.Target = Enum.UIStrokeTarget.Text
+    TextStroke.Color = Color3.fromRGB(10, 10, 12)
+    TextStroke.Thickness = 1
+
     local AccentLine = Instance.new("Frame", MiniBar)
     AccentLine.Size = UDim2.new(1, 0, 0, 3)
     AccentLine.Position = UDim2.new(0, 0, 0, 0)
-    AccentLine.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- Diubah Jadi Putih!
+    AccentLine.BackgroundColor3 = Color3.fromRGB(225, 225, 230) 
     AccentLine.BorderSizePixel = 0
     Instance.new("UICorner", AccentLine).CornerRadius = UDim.new(0, 2)
 
@@ -96,30 +122,30 @@ function RyosenLib:CreateWindow(Config)
     Container.Position = UDim2.new(0, 175, 0, 45)
     Container.BackgroundTransparency = 1
 
-    -- [[ 4. AVATAR REAL-TIME VERSI PAS & FIX ENGINE KOSONG ]] --
+    -- AVATAR REAL-TIME VERSI PAS & FIX ENGINE KOSONG
     local Profile = Instance.new("Frame", Sidebar)
-    Profile.Size = UDim2.new(0.9, 0, 0, 85) -- Tinggi dipasin jadi 85 biar padat
+    Profile.Size = UDim2.new(0.9, 0, 0, 85) 
     Profile.Position = UDim2.new(0.05, 0, 1, -95)
     Profile.BackgroundColor3 = Color3.fromRGB(26, 26, 32)
     Instance.new("UICorner", Profile).CornerRadius = UDim.new(0, 8)
     local ProfileStroke = Instance.new("UIStroke", Profile); ProfileStroke.Color = Color3.fromRGB(240, 240, 245); ProfileStroke.Thickness = 1
 
     local Avatar = Instance.new("ImageLabel", Profile)
-    Avatar.Size = UDim2.new(0, 46, 0, 46) -- Ukuran pas proporsional
+    Avatar.Size = UDim2.new(0, 46, 0, 46) 
     Avatar.Position = UDim2.new(0, 10, 0, 10)
     Avatar.Image = "rbxthumb://type=AvatarHeadShot&id="..LocalPlayer.UserId.."&w=150&h=150"
     Avatar.BackgroundTransparency = 1
     Instance.new("UICorner", Avatar).CornerRadius = UDim.new(1, 0)
 
     local UserText = Instance.new("TextLabel", Profile)
-    UserText.Size = UDim2.new(1, -72, 0, 36) -- Lebar di-adjust biar pas di samping avatar
-    UserText.Position = UDim2.new(0, 64, 0, 14) -- Di-center sejajar tinggi mata avatar
+    UserText.Size = UDim2.new(1, -72, 0, 36) 
+    UserText.Position = UDim2.new(0, 64, 0, 14) 
     UserText.Text = LocalPlayer.DisplayName .. "\n@" .. LocalPlayer.Name
     UserText.TextColor3 = Color3.new(1, 1, 1)
     UserText.Font = Enum.Font.GothamBold
-    UserText.TextSize = 11 -- Teks dinaikin dikit ukurannya biar jelas
+    UserText.TextSize = 11 
     UserText.TextXAlignment = "Left"
-    UserText.TextYAlignment = "Center" -- Dipaksa tengah biar ga melayang kosong
+    UserText.TextYAlignment = "Center" 
     UserText.BackgroundTransparency = 1
 
     local StatusDot = Instance.new("Frame", Profile)
@@ -140,6 +166,59 @@ function RyosenLib:CreateWindow(Config)
 
     LocalPlayer.Idled:Connect(function() StatusDot.BackgroundColor3 = Color3.fromRGB(255, 50, 50); StatusText.Text = "AFK"; StatusText.TextColor3 = Color3.fromRGB(255, 50, 50) end)
     UserInputService.InputBegan:Connect(function() if StatusText.Text == "AFK" then StatusDot.BackgroundColor3 = Color3.fromRGB(0, 215, 100); StatusText.Text = "Aktif"; StatusText.TextColor3 = Color3.fromRGB(0, 215, 100) end end)
+
+    -- [[ RAYFIELD-STYLE LOADING SCREEN ENGINE ]] --
+    local LoadingFrame = Instance.new("Frame", Gui)
+    LoadingFrame.Size = UDim2.new(0, 360, 0, 160)
+    LoadingFrame.Position = UDim2.new(0.5, -180, 0.5, -80)
+    LoadingFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 18)
+    Instance.new("UICorner", LoadingFrame).CornerRadius = UDim.new(0, 10)
+    local LoadStroke = Instance.new("UIStroke", LoadingFrame); LoadStroke.Color = Color3.fromRGB(45, 45, 50); LoadStroke.Thickness = 1
+
+    local LoadTitle = Instance.new("TextLabel", LoadingFrame)
+    LoadTitle.Size = UDim2.new(1, 0, 0, 50)
+    LoadTitle.Position = UDim2.new(0, 0, 0, 25)
+    LoadTitle.Text = "RYOSEN" -- Tulisan Ryosen Sesuai Request, Bos!
+    LoadTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    LoadTitle.Font = Enum.Font.GothamBold
+    LoadTitle.TextSize = 28
+    LoadTitle.BackgroundTransparency = 1
+
+    local BarBg = Instance.new("Frame", LoadingFrame)
+    BarBg.Size = UDim2.new(0.8, 0, 0, 6)
+    BarBg.Position = UDim2.new(0.1, 0, 0, 85)
+    BarBg.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+    BarBg.BorderSizePixel = 0
+    Instance.new("UICorner", BarBg)
+
+    local BarFill = Instance.new("Frame", BarBg)
+    BarFill.Size = UDim2.new(0, 0, 1, 0) -- Mulai dari 0%
+    BarFill.BackgroundColor3 = Color3.fromRGB(225, 225, 230) -- Putih Soft Kalem selaras MiniBar
+    BarFill.BorderSizePixel = 0
+    Instance.new("UICorner", BarFill)
+
+    local PercentText = Instance.new("TextLabel", LoadingFrame)
+    PercentText.Size = UDim2.new(1, 0, 0, 20)
+    PercentText.Position = UDim2.new(0, 0, 0, 105)
+    PercentText.Text = "Loading... 0%"
+    PercentText.TextColor3 = Color3.fromRGB(140, 140, 145)
+    PercentText.Font = Enum.Font.Gotham
+    PercentText.TextSize = 12
+    PercentText.BackgroundTransparency = 1
+
+    -- Animasi Loading Jalan
+    task.spawn(function()
+        for i = 1, 100 do
+            local formula = i / 100
+            BarFill.Size = UDim2.new(formula, 0, 1, 0)
+            PercentText.Text = "Loading... " .. i .. "%"
+            task.wait(0.02) -- Kecepatan loading screen (total +- 2 detik)
+        end
+        task.wait(0.2)
+        -- Hancurkan Loading, Munculkan UI Utama
+        LoadingFrame:Destroy()
+        Main.Visible = true
+    end)
 
     -- GLOBAL KEYBIND (RIGHT SHIFT)
     UserInputService.InputBegan:Connect(function(input, gpe)
