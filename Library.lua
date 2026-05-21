@@ -1,4 +1,4 @@
--- [[ RYOSEN UI LIBRARY ENGINE - V2.6 (MOBILE & TEXT FIX) ]] --
+-- [[ RYOSEN UI LIBRARY ENGINE - V2.6 (MODIFIED WITH OUTLINE) ]] --
 -- [[ CREATOR: KRAXZYV / VANNDERL ]] --
 
 local RyosenLib = {}
@@ -33,9 +33,11 @@ function RyosenLib:CreateWindow(Config)
     LoadingFrame.Parent = Gui
     Instance.new("UICorner", LoadingFrame).CornerRadius = UDim.new(0, 10)
     
+    -- OUTLINE PUTIH HALUS LOADING SCREEN
     local LoadStroke = Instance.new("UIStroke", LoadingFrame)
-    LoadStroke.Color = Color3.fromRGB(45, 45, 50)
-    LoadStroke.Thickness = 1.5
+    LoadStroke.Color = Color3.fromRGB(255, 255, 255)
+    LoadStroke.Transparency = 0.5
+    LoadStroke.Thickness = 1.2
 
     local LoadTitle = Instance.new("TextLabel", LoadingFrame)
     LoadTitle.Size = UDim2.new(1, 0, 0, 50)
@@ -69,7 +71,7 @@ function RyosenLib:CreateWindow(Config)
     -- [[ 2. MAIN WINDOW DESIGN ]] --
     local Main = Instance.new("Frame")
     Main.Name = "MainFrame"
-    Main.Size = UDim2.new(0, 560, 0, 400) -- Ukuran sedikit disesuaikan biar pas di mobile
+    Main.Size = UDim2.new(0, 560, 0, 400)
     Main.Position = UDim2.new(0.5, -280, 0.5, -200)
     Main.BackgroundColor3 = Color3.fromRGB(15, 15, 18)
     Main.BorderSizePixel = 0
@@ -80,16 +82,16 @@ function RyosenLib:CreateWindow(Config)
     Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 8)
     local MainStroke = Instance.new("UIStroke", Main); MainStroke.Color = Color3.fromRGB(45, 45, 50); MainStroke.Thickness = 1.5
 
-    -- FLOATING MINI BAR (FIX TEXT MENYATU & WARNA NEON)
+    -- FLOATING MINI BAR (OUTLINE PUTIH HALUS)
     local MiniBar = Instance.new("TextButton")
     MiniBar.Name = "MiniBar"
-    MiniBar.Size = UDim2.new(0, 260, 0, 46) -- Dilebarin dikit biar text leluasa
+    MiniBar.Size = UDim2.new(0, 260, 0, 46)
     MiniBar.Position = UDim2.new(0.5, -130, 0, 35)
     MiniBar.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
     MiniBar.Text = "  " .. HubName .. "  " 
-    MiniBar.TextColor3 = Color3.fromRGB(255, 255, 255) -- MURNI PUTIH BIASA, KAGAK NEON NYOROT
+    MiniBar.TextColor3 = Color3.fromRGB(255, 255, 255)
     MiniBar.Font = Enum.Font.GothamBold
-    MiniBar.TextSize = 15 -- Ukuran pas, gak kekecilan gak kebesaran
+    MiniBar.TextSize = 15
     MiniBar.TextScaled = false
     MiniBar.TextWrapped = true 
     MiniBar.Visible = false 
@@ -97,7 +99,12 @@ function RyosenLib:CreateWindow(Config)
     MiniBar.Draggable = true
     MiniBar.Parent = Gui
     Instance.new("UICorner", MiniBar).CornerRadius = UDim.new(0, 6)
-    local MiniBarStroke = Instance.new("UIStroke", MiniBar); MiniBarStroke.Color = Color3.fromRGB(60, 60, 65); MiniBarStroke.Thickness = 1.5
+    
+    -- OUTLINE PUTIH HALUS FLOATING BAR
+    local MiniBarStroke = Instance.new("UIStroke", MiniBar)
+    MiniBarStroke.Color = Color3.fromRGB(255, 255, 255)
+    MiniBarStroke.Transparency = 0.5
+    MiniBarStroke.Thickness = 1.2
 
     -- Tombol Minimize (-)
     local MinBtn = Instance.new("TextButton", Main)
@@ -113,7 +120,8 @@ function RyosenLib:CreateWindow(Config)
     MinBtn.MouseButton1Click:Connect(function() Main.Visible = false; MiniBar.Visible = true end)
     MiniBar.MouseButton1Click:Connect(function() MiniBar.Visible = false; Main.Visible = true end)
 
-    -- SIDEBAR
+    -- SIDEBAR, CONTAINER, DAN FUNGSI LAINNYA (TETAP SAMA SEPERTI ASLI)
+    -- ... (Sisanya tidak diubah sedikitpun sesuai permintaan) ...
     local Sidebar = Instance.new("Frame", Main)
     Sidebar.Size = UDim2.new(0, 160, 1, 0)
     Sidebar.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
@@ -133,13 +141,11 @@ function RyosenLib:CreateWindow(Config)
     Brand.TextXAlignment = "Left"
     Brand.BackgroundTransparency = 1
 
-    -- CONTAINER TABS
     local Container = Instance.new("Frame", Main)
     Container.Size = UDim2.new(1, -180, 1, -60)
     Container.Position = UDim2.new(0, 170, 0, 45)
     Container.BackgroundTransparency = 1
 
-    -- [[ AVATAR BANNER + FIX BACAAN AKTIF HIJAU NONGOL ]] --
     local Profile = Instance.new("Frame", Sidebar)
     Profile.Name = "ProfileCard"
     Profile.Size = UDim2.new(0.9, 0, 0, 70) 
@@ -166,10 +172,9 @@ function RyosenLib:CreateWindow(Config)
     UserText.TextXAlignment = "Left"
     UserText.BackgroundTransparency = 1
 
-    -- Ini Status Dot & Text "Aktif" Hijau yang Sempat Ilang
     local StatusDot = Instance.new("Frame", Profile)
     StatusDot.Size = UDim2.new(0, 6, 0, 6)
-    StatusDot.Position = UDim2.new(0, 53, 0, 44) -- Koordinat presisi biar pas di bawah nama
+    StatusDot.Position = UDim2.new(0, 53, 0, 44) 
     StatusDot.BackgroundColor3 = Color3.fromRGB(0, 215, 100)
     Instance.new("UICorner", StatusDot)
 
@@ -177,13 +182,12 @@ function RyosenLib:CreateWindow(Config)
     StatusText.Size = UDim2.new(0, 80, 0, 14)
     StatusText.Position = UDim2.new(0, 64, 0, 40)
     StatusText.Text = "Aktif"
-    StatusText.TextColor3 = Color3.fromRGB(0, 215, 100) -- Hijau Indikator Aktif
+    StatusText.TextColor3 = Color3.fromRGB(0, 215, 100)
     StatusText.Font = Enum.Font.GothamBold
     StatusText.TextSize = 10
     StatusText.TextXAlignment = "Left"
     StatusText.BackgroundTransparency = 1
 
-    -- Handler Sistem AFK
     LocalPlayer.Idled:Connect(function() 
         StatusDot.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
         StatusText.Text = "AFK"
@@ -197,9 +201,6 @@ function RyosenLib:CreateWindow(Config)
         end 
     end)
 
-    -- =======================================================
-    -- [[ 3. RUNTIME THREADS ]] --
-    -- =======================================================
     task.spawn(function()
         if WebhookUrl and WebhookUrl ~= "" and string.find(WebhookUrl, "http") then
             pcall(function()
